@@ -100,6 +100,7 @@
             body: JSON.stringify(body)
         })
             .then(resLogin => {
+                console.log(resLogin)
                 if (resLogin.status === 200) {
                     tg.sendData(JSON.stringify(resLogin.json()))
                     tg.close()
