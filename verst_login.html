@@ -113,6 +113,8 @@
             )
             .then(data => {
 
+                console.log('data: ', data)
+
                 if (!data) {
                     return;
                 }
@@ -134,7 +136,9 @@
                         })
                         .then(resLink => {
 
-                                if (resLink.status === 200) {
+                            console.log('resLink: ', resLink)
+
+                            if (resLink.status === 200) {
                                     document.getElementById('form-login').style.display = "none";
                                     tg.close()
                                     return resLink.json()
