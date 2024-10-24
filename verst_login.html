@@ -131,7 +131,7 @@
                             },
                             body: JSON.stringify({
                                 telegram_id: tgId,
-                                verst_id: login
+                                verst_id: Number(login)
                             })
                         })
                         .then(resLink => {
