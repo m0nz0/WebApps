@@ -98,6 +98,7 @@
             .then(res => res.json())
             .then(resLogin => {
                 console.log(resLogin)
+                console.log(resLogin.result.token)
                 if (!resLogin.errorMessage) {
                     tg.sendData(JSON.stringify({token: resLogin.result.token}))
                     tg.close()
