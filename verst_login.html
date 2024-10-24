@@ -55,10 +55,7 @@
                         </div>
                     </div>
                     <div id="error-login" style="display: none">
-                        <span style="color: red">Ошибка авторизации на сайте 5 вёрст</span>
-                    </div>
-                    <div id="error-link" style="display: none">
-                        <span style="color: red">Ошибка связи аккаунтов</span>
+                        <span style="color: red" id="errText"></span>
                     </div>
                 </div>
 
@@ -102,10 +99,12 @@
             .then(res => res.json())
             .then(resLogin => {
                 console.log(resLogin)
-                if (resLogin.status === 200) {
+                if (resLogin.errorMessage === "") {
                     tg.sendData(JSON.stringify(resLogin.json()))
                     tg.close()
                 } else {
+
+                    document.getElementById('errText').innerText = resLogin.errorMessage;
                     document.getElementById('error-login').style.display = "block";
                 }
             })
