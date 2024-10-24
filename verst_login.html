@@ -114,37 +114,13 @@
                 console.log('data: ', data)
 
                 if (!data) {
-                    return;
+                    return null;
                 }
 
                 let token = data.result.token;
 
                 if (token) {
-                    return fetch('https://nrms.5verst.ru/api/v1/telegram/link',
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Auth-Token': 'pUrkRuNFaRevA'
-                            },
-                            body: JSON.stringify({
-                                telegram_id: tgId,
-                                verst_id: Number(login)
-                            })
-                        })
-                        .then(resLink => {
-
-                                console.log('resLink: ', resLink)
-
-                                if (resLink.status === 200) {
-                                    tg.close()
-                                    return resLink.json()
-                                }
-
-                                document.getElementById('error-link').style.display = "block";
-                                return null;
-                            }
-                        )
+                    tg.sendData(JSON.stringify({login: login}))
                 }
 
                 return null;
