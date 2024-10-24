@@ -54,14 +54,17 @@
                             </span>
                         </div>
                     </div>
-                    <span id="tgid"></span>
-                    <span id="tguser"></span>
-                    <div id="error" style="display: none">
+                    <div id="error-login" style="display: none">
                         <span style="color: red">Ошибка авторизации на сайте 5 вёрст</span>
+                    </div>
+                    <div id="error-link" style="display: none">
+                        <span style="color: red">Ошибка связи аккаунтов</span>
                     </div>
                 </div>
 
-                <button class="SignInScreen_submit__cfip2" id="btn">Вход</button>
+                <button type="button"
+                        class="SignInScreen_submit__cfip2" id="btn">Вход
+                </button>
                 <div class="SignInScreen_remind__Kb6Rx">
                     <a href="https://nrms.5verst.ru/#/remindpassword">Забыли пароль?</a>
                 </div>
@@ -73,14 +76,10 @@
 
     let tg = window.Telegram.WebApp;
     tg.expand();
-    let user = tg.initDataUnsafe.user;
-    let tgId = 1234; //tg.initDataUnsafe.user.id;
-
-    document.getElementById('tgid').textContent = tgId
-    document.getElementById('tguser').textContent = JSON.stringify(user)
+    let tgId = tg.initDataUnsafe.user.id;
 
     document.getElementById('view').addEventListener('click', () => {
-        var pass = document.getElementById('password')
+        let pass = document.getElementById('password')
         if (pass.type === "password") {
             pass.type = 'text'
         } else {
@@ -88,7 +87,8 @@
         }
     })
     document.getElementById('btn').addEventListener('click', () => {
-        document.getElementById('error').style.display = "none";
+        document.getElementById('error-login').style.display = "none";
+        document.getElementById('error-link').style.display = "none";
 
         let login = document.getElementById('login').value;
         let pass = document.getElementById('password').value;
@@ -100,30 +100,52 @@
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body)
         })
-            .then(res => {
-                if (res.status === 200) {
-                    console.log("response: ", res)
-                    document.getElementById('form-login').style.display = "none";
+            .then(resLogin => {
+                    if (resLogin.status === 200) {
 
-                    // fetch('')
-                    tg.close()
-                    return res.json()
+                        document.getElementById('form-login').style.display = "none";
+                        return resLogin.json()
+                    }
+                    document.getElementById('form-login').style.display = "block";
+                    document.getElementById('error-login').style.display = "block";
+                    return null
                 }
-                console.error('Ошибка авторизации на сайте 5 вёрст')
-                document.getElementById('form-login').style.display = "block";
-                document.getElementById('error').style.display = "block";
-                return null;
+            )
+            .then(data => {
+
+                if (!data) {
+                    return;
+                }
+
+                let token = data.result.token;
+
+                if (token) {
+                    fetch('https://nrms.5verst.ru/api/v1/telegram/link',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Auth-Token': 'pUrkRuNFaRevA'
+                            },
+                            body: JSON.stringify({
+                                telegram_id: tgId,
+                                verst_id: login
+                            })
+                        })
+                        .then(resLink => {
+
+                                if (resLink.status === 200) {
+                                    document.getElementById('form-login').style.display = "none";
+                                    tg.close()
+                                    return resLink.json()
+                                }
+
+                                document.getElementById('form-login').style.display = "block";
+                                document.getElementById('error-link').style.display = "block";
+                            }
+                        )
+                }
             })
-        // .then(data => {
-        //         console.log(data)
-        //         let token = data.result.token;
-        //         console.log(token);
-        //
-        //         tg.sendData(JSON.stringify({verstId: login}))
-        //
-        //         tg.close()
-        //     }
-        // )
     })
 </script>
 </body>
@@ -212,7 +234,7 @@
         box-sizing: border-box;
     }
 
-    :selection {
+    ::selection {
         background: #1890ff;
         color: #fff;
     }
