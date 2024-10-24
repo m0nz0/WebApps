@@ -55,6 +55,7 @@
                         </div>
                     </div>
                     <span id="tgid"></span>
+                    <span id="tguser"></span>
                     <div id="error" style="display: none">
                         <span style="color: red">Ошибка авторизации на сайте 5 вёрст</span>
                     </div>
@@ -72,9 +73,11 @@
 
     let tg = window.Telegram.WebApp;
     tg.expand();
-    let tgId = tg.initDataUnsafe.user.id;
+    let user = tg.initDataUnsafe.user;
+    let tgId = 1234; //tg.initDataUnsafe.user.id;
 
-    document.getElementById('tgid').textContent=tgId
+    document.getElementById('tgid').textContent = tgId
+    document.getElementById('tguser').textContent = JSON.stringify(user)
 
     document.getElementById('view').addEventListener('click', () => {
         var pass = document.getElementById('password')
