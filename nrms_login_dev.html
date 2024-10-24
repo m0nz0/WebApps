@@ -20,7 +20,7 @@
                     <div class="SignInScreen_input__Dkryf">
                         <label class="SignInScreen_login__1ReaB"
                                for="login">
-                            Логин:
+                            <span style="color: red">Логин DEV</span>:
                         </label>
                         <input class="SignInScreen_login__1ReaB"
                                placeholder="123456789"
@@ -54,6 +54,8 @@
                             </span>
                         </div>
                     </div>
+                    <span style="color: red" id="info"></span>
+                    <span style="color: red" id="info2"></span>
                     <div id="error-login" style="display: none">
                         <span style="color: red" id="errText"></span>
                     </div>
@@ -75,6 +77,9 @@
     tg.expand();
 
     document.getElementById('view').addEventListener('click', () => {
+        document.getElementById('info').innerText=JSON.stringify(tg.initDataUnsafe)
+        document.getElementById('info2').innerText=JSON.stringify(tg.initData)
+
         let pass = document.getElementById('password')
         if (pass.type === "password") {
             pass.type = 'text'
@@ -85,23 +90,61 @@
     document.getElementById('btn').addEventListener('click', () => {
         document.getElementById('error-login').style.display = "none";
 
+        let urlParams = document.location.search.split('?')[1]
+            .split('&')
+            .map((item) => {
+                let s = item.split('=');
+                return {key: s[0], value: s[1]}
+            })
+
+        let calendarId = urlParams.find(x => x.key === 'c').value;
+        let locationId = urlParams.find(x => x.key === 'l').value;
+
         let login = document.getElementById('login').value;
         let pass = document.getElementById('password').value;
 
         let body = {username: "A" + login, password: pass}
 
-        fetch('https://nrms.5verst.ru/api/v1/account/login', {
+        fetch('https://nrms-dev.5verst.ru/api/v1/auth/login', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body)
         })
             .then(res => res.json())
             .then(resLogin => {
-                console.log(resLogin)
-                console.log(resLogin.result.token)
+
                 if (!resLogin.errorMessage) {
-                    tg.sendData(JSON.stringify({token: resLogin.result.token}))
-                    tg.close()
+
+                    let token = resLogin.result.token;
+                    let saveNrmsRequest = {
+                        c: calendarId,
+                        pv: locationId,
+                        to: token,
+                        tg: tg.initDataUnsafe.user.id
+                    }
+
+                    let urlPrefix = 'https://6e3b-83-221-24-133.ngrok-free.app'
+                    let url = `${urlPrefix}/api/v1/nrms/save-nrms`
+                    let headers = {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Methods': '*'
+                    };
+
+                    fetch(url, {
+                        method: 'POST',
+                        body: JSON.stringify(saveNrmsRequest),
+                        headers: headers,
+                    })
+                        .then(res => {
+
+                            tg.close()
+                        })
+                        .catch((err) => {
+                            document.getElementById('errText').innerText = JSON.stringify(err);
+                            document.getElementById('error-login').style.display = "block";
+
+                        })
                 } else {
                     document.getElementById('errText').innerText = resLogin.errorMessage;
                     document.getElementById('error-login').style.display = "block";
@@ -210,7 +253,7 @@
     }
 
     .SignInScreen_wrapper__g60OM main .SignInScreen_logo__Iibpj {
-        background-color: #6e84be;
+        background-color: #741414;
         border-top-left-radius: 20px;
         border-top-right-radius: 20px;
         padding: 20px;

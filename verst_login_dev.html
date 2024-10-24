@@ -20,7 +20,7 @@
                     <div class="SignInScreen_input__Dkryf">
                         <label class="SignInScreen_login__1ReaB"
                                for="login">
-                            Логин:
+                            <span style="color: red">Логин DEV</span>:
                         </label>
                         <input class="SignInScreen_login__1ReaB"
                                placeholder="123456789"
@@ -90,7 +90,7 @@
 
         let body = {username: "A" + login, password: pass}
 
-        fetch('https://nrms.5verst.ru/api/v1/account/login', {
+        fetch('https://nrms-dev.5verst.ru/api/v1/account/login', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body)
