@@ -99,7 +99,7 @@
             .then(resLogin => {
                 console.log(resLogin)
                 if (!resLogin.errorMessage) {
-                    tg.sendData(JSON.stringify(JSON.stringify({token: resLogin.result.token})))
+                    tg.sendData(JSON.stringify({token: resLogin.result.token}))
                     tg.close()
                 } else {
                     document.getElementById('errText').innerText = resLogin.errorMessage;
