@@ -100,19 +100,16 @@
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body)
         })
-            .then(resLogin => {
-                    if (resLogin.status === 200) {
-
-                        return resLogin.json()
-
-                    }
-                    document.getElementById('error-login').style.display = "block";
-                    return null
-                }
+            .then(resLogin =>
+                resLogin.status === 200 ? resLogin.json() : null
             )
             .then(data => {
-                tg.sendData(JSON.stringify({login: login}))
-                tg.close()
+                if (data === null) {
+                    document.getElementById('error-login').style.display = "block";
+                } else {
+                    tg.sendData(JSON.stringify({login: login}))
+                    tg.close()
+                }
             })
     })
 </script>
