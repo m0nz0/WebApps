@@ -104,26 +104,15 @@
                     if (resLogin.status === 200) {
 
                         return resLogin.json()
+
                     }
                     document.getElementById('error-login').style.display = "block";
                     return null
                 }
             )
             .then(data => {
-
-                console.log('data: ', data)
-
-                if (!data) {
-                    return null;
-                }
-
-                let token = data.result.token;
-
-                if (token) {
-                    tg.sendData(JSON.stringify({login: login}))
-                }
-
-                return null;
+                tg.sendData(JSON.stringify({login: login}))
+                tg.close()
             })
     })
 </script>
