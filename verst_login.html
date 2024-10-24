@@ -71,6 +71,7 @@
 
     let tg = window.Telegram.WebApp;
     tg.expand();
+    let tgId = tg.initDataUnsafe.user.id;
 
     document.getElementById('view').addEventListener('click', () => {
         var pass = document.getElementById('password')
