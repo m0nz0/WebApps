@@ -146,9 +146,6 @@
 
     tg.expand();
 
-    let login = document.getElementById('login').value;
-    let pass = document.getElementById('password').value;
-
     document.getElementById('view').addEventListener('click', () => {
         let pass = document.getElementById('password')
         if (pass.type === 'password') {
@@ -290,7 +287,8 @@
     document.getElementById('btn').addEventListener('click', () => {
         document.getElementById('error-login').style.display = 'none';
 
-        console.log(action, target,)
+        let login = document.getElementById('login').value;
+        let pass = document.getElementById('password').value;
 
         if (action === Action.SaveNrms) {
             if (target === Target.Nrms && source === Source.Inline) {
