@@ -79,29 +79,26 @@
 
     const Config = {
         Dev: {
-            UrlBase: 'https://nrms.5verst.ru',
-            UrlBot: 'https://old-bot.dev.5verst.ru',
+            UrlBase: 'https://nrms.dev.5verst.ru',
+            UrlBot: 'https://4768-83-221-24-133.ngrok-free.app',
             Label: {
                 Color: 'red',
                 Text: 'Логин DEV'
             },
-            HeaderColor: {
-                Nrms: '#741414',
-                Verst: '#6e84be'
-            }
         },
         Prod: {
-            UrlBase: 'https://nrms.dev.5verst.ru',
-            UrlBot: 'https://4768-83-221-24-133.ngrok-free.app',
+            UrlBase: 'https://nrms.5verst.ru',
+            UrlBot: 'https://old-bot.dev.5verst.ru',
             Label: {
                 Color: '#777',
                 Text: 'Логин',
             },
-            HeaderColor: {
-                Nrms: '#741414',
-                Verst: '#6e84be'
-            }
         }
+    }
+
+    const HeaderColor = {
+        Nrms: '#741414',
+        Verst: '#6e84be'
     }
 
     const Source = {
@@ -141,7 +138,7 @@
     let actionId = urlParams.find(x => x.key === 'a')?.value;
     let version = urlParams.find(x => x.key === 'v').value;
 
-    document.getElementById('header').style.backgroundColor = Config[version].HeaderColor[target];
+    document.getElementById('header').style.backgroundColor = HeaderColor[target];
     document.getElementById('login_text').textContent = Config[version].Label.Text;
     document.getElementById('login_text').style.color = Config[version].Label.Color;
 
@@ -291,17 +288,22 @@
     document.getElementById('btn').addEventListener('click', () => {
         document.getElementById('error-login').style.display = 'none';
 
-        if (target === Target.Nrms && source === Source.Inline && actionId === Action.Auth) {
-            // Авторизация с клавы
-            authNrmsAndCallNrmsController(login, pass, calendarId, locationId);
-        } else if (target === Target.Verst && source === Source.Reply && actionId === Action.SaveNrms) {
-            // сохранить список волонеров с кнопки
-            authVerstAndSendDataBackToBot(login, pass);
-        } else if (target === Target.Verst && source === Source.Inline && actionId === Action.Auth) {
-            // Авторизация с кнопки
-            authVerstAndCallLinkController(login, pass);
+        if (actionId === Action.SaveNrms) {
+            if (target === Target.Nrms && source === Source.Inline) {
+                // сохранить список волонеров с кнопки
+                authNrmsAndCallNrmsController(login, pass, calendarId, locationId);
+            }
+        } else if (actionId === Action.Auth) {
+            if (target === Target.Verst && source === Source.Reply) {
+                // Авторизация с клавы
+                authVerstAndSendDataBackToBot(login, pass);
+            } else if (target === Target.Verst && source === Source.Inline) {
+                // Авторизация с кнопки
+                authVerstAndCallLinkController(login, pass);
+            }
         }
     })
+
 </script>
 </body>
 <style>
