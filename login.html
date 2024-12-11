@@ -112,10 +112,10 @@
     }
 
     const Action = {
-        // авторизация verst из клавы
-        Auth: 4,
-        // Авторизация в nrms из кнопки
-        SaveNrms: 39
+        // авторизация verst из клавы 4
+        Auth: 'Auth',
+        // Авторизация в nrms из кнопки 39
+        SaveNrms: 'SaveNrms'
     }
 
     const getEnumKey = (obj, value) => {
@@ -135,8 +135,10 @@
     let locationId = urlParams.find(x => x.key === 'l')?.value;
     let source = urlParams.find(x => x.key === 's')?.value;
     let target = urlParams.find(x => x.key === 't')?.value;
-    let actionId = urlParams.find(x => x.key === 'a')?.value;
+    let action = urlParams.find(x => x.key === 'a')?.value;
     let version = urlParams.find(x => x.key === 'v').value;
+
+    console.log(calendarId, locationId, source, target, action, version)
 
     document.getElementById('header').style.backgroundColor = HeaderColor[target];
     document.getElementById('login_text').textContent = Config[version].Label.Text;
@@ -288,12 +290,14 @@
     document.getElementById('btn').addEventListener('click', () => {
         document.getElementById('error-login').style.display = 'none';
 
-        if (actionId === Action.SaveNrms) {
+        console.log(action, target,)
+
+        if (action === Action.SaveNrms) {
             if (target === Target.Nrms && source === Source.Inline) {
                 // сохранить список волонеров с кнопки
                 authNrmsAndCallNrmsController(login, pass, calendarId, locationId);
             }
-        } else if (actionId === Action.Auth) {
+        } else if (action === Action.Auth) {
             if (target === Target.Verst && source === Source.Reply) {
                 // Авторизация с клавы
                 authVerstAndSendDataBackToBot(login, pass);
