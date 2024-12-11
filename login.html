@@ -74,8 +74,8 @@
 
     const nrmsAuthUrl = '/api/v1/auth/login';
     const verstAuthUrl = '/api/v1/account/login';
-    const saveTeamUrl = '/api/v1/nrms/save-nrms';
-    const linkUrl = '/api/v1/link/link';
+    const saveTeamUrl = '/api/v1/webapp/save-nrms';
+    const linkUrl = '/api/v1/webapp/link';
 
     const Config = {
         Dev: {
@@ -236,7 +236,7 @@
 
                     fetch(`${Config[version].UrlBot}${linkUrl}`, {
                         method: 'POST',
-                        body: JSON.stringify({tgId: tg.initDataUnsafe.user.id, verstId: login}),
+                        body: JSON.stringify({tg: tg.initDataUnsafe.user.id, ve: login}),
                         headers: headers,
                     })
                         .then(res => {
