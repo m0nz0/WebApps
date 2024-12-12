@@ -76,6 +76,7 @@
     const verstAuthUrl = '/api/v1/account/login';
     const saveTeamUrl = '/api/v1/webapp/save-nrms';
     const linkUrl = '/api/v1/webapp/link';
+    const additionalLinkUrl = '/api/v1/webapp/additional-link';
 
     const Config = {
         Dev: {
@@ -117,7 +118,9 @@
         // авторизация verst из клавы 4
         Auth: 'Auth',
         // Авторизация в nrms из кнопки 39
-        SaveNrms: 'SaveNrms'
+        SaveNrms: 'SaveNrms',
+        // Доп аккаунты 40
+        AdditionalLink: 'AdditionalLink'
     }
 
     const getEnumKey = (obj, value) => {
@@ -211,7 +214,7 @@
     }
 
     // авторизация verst и запрос на линковку
-    const authVerstAndCallLinkController = (login, pass) => {
+    const authVerstAndCallLinkController = (login, pass, url) => {
         let body = {username: 'A' + login, password: pass}
 
         console.log('Verst link. Verst auth start')
@@ -236,7 +239,7 @@
 
                     console.log('Verst link. Link start')
 
-                    fetch(`${Config[version].UrlBot}${linkUrl}`, {
+                    fetch(`${Config[version].UrlBot}${url}`, {
                         method: 'POST',
                         body: JSON.stringify({tg: tg.initDataUnsafe.user.id, ve: login}),
                         headers: headers,
@@ -303,8 +306,11 @@
                 authVerstAndSendDataBackToBot(login, pass);
             } else if (target === Target.Verst && source === Source.Inline) {
                 // Авторизация с кнопки
-                authVerstAndCallLinkController(login, pass);
+                authVerstAndCallLinkController(login, pass, linkUrl);
             }
+        } else if (action === Action.AdditionalLink) {
+            // Авторизация с кнопки
+            authVerstAndCallLinkController(login, pass, additionalLinkUrl);
         }
     })
 
