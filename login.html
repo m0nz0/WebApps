@@ -241,7 +241,7 @@
 
                     fetch(`${Config[version].UrlBot}${url}`, {
                         method: 'POST',
-                        body: JSON.stringify({tg: tg.initDataUnsafe.user.id, ve: login}),
+                        body: JSON.stringify({tg: tg.initDataUnsafe.user.id, vid: login}),
                         headers: headers,
                     })
                         .then(res => {
