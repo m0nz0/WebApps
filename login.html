@@ -84,7 +84,15 @@
             UrlBot: 'https://150c-83-221-24-133.ngrok-free.app',
             Label: {
                 Color: 'red',
-                Text: 'Логин DEV'
+                Text: {
+                    Nrms: {
+                        Auth: 'Логин (ваш 5 вёрст ID) DEV'
+                    },
+                    Verst: {
+                        Auth: 'Логин (ваш 5 вёрст ID) DEV',
+                        AdditionalLink: 'Логин (дополнительный 5 вёрст ID) DEV',
+                    }
+                }
             },
         },
         Prod: {
@@ -92,7 +100,15 @@
             UrlBot: 'https://old-bot.dev.5verst.ru',
             Label: {
                 Color: '#777',
-                Text: 'Логин',
+                Text: {
+                    Nrms: {
+                        Auth: 'Логин (ваш 5 вёрст ID)'
+                    },
+                    Verst: {
+                        Auth: 'Логин (ваш 5 вёрст ID)',
+                        AdditionalLink: 'Логин (дополнительный 5 вёрст ID)',
+                    }
+                }
             },
         }
     }
@@ -144,7 +160,7 @@
     console.log(calendarId, locationId, source, target, action, version)
 
     document.getElementById('header').style.backgroundColor = HeaderColor[target];
-    document.getElementById('login_text').textContent = Config[version].Label.Text;
+    document.getElementById('login_text').textContent = Config[version].Label.Text[target][action];
     document.getElementById('login_text').style.color = Config[version].Label.Color;
 
     tg.expand();
@@ -288,27 +304,29 @@
     }
 
     document.getElementById('btn').addEventListener('click', () => {
+        console.log("sign clicked")
         document.getElementById('error-login').style.display = 'none';
 
         let login = document.getElementById('login').value;
         let pass = document.getElementById('password').value;
 
-        if (action === Action.SaveNrms) {
-            if (target === Target.Nrms && source === Source.Inline) {
-                // сохранить список волонеров с кнопки
-                authNrmsAndCallNrmsController(login, pass, calendarId, locationId);
-            }
-        } else if (action === Action.Auth) {
-            if (target === Target.Verst && source === Source.Reply) {
-                // Авторизация с клавы
-                authVerstAndSendDataBackToBot(login, pass);
-            } else if (target === Target.Verst && source === Source.Inline) {
-                // Авторизация с кнопки
-                authVerstAndCallLinkController(login, pass, linkUrl);
-            }
-        } else if (action === Action.AdditionalLink) {
+        console.log(login, pass, calendarId, locationId, source, target, action, version)
+
+        if (action === Action.SaveNrms && target === Target.Nrms && source === Source.Inline) {
+            // сохранить список волонеров с кнопки
+            authNrmsAndCallNrmsController(login, pass, calendarId, locationId);
+        } else if (action === Action.Auth && target === Target.Verst && source === Source.Reply) {
+            // Авторизация с клавы
+            authVerstAndSendDataBackToBot(login, pass);
+        } else if (target === Target.Verst && source === Source.Inline && action === Action.Auth) {
+            // Авторизация с кнопки
+            authVerstAndCallLinkController(login, pass, linkUrl);
+        } else if (target === Target.Verst && source === Source.Inline && action === Action.AdditionalLink) {
             // Авторизация с кнопки
             authVerstAndCallLinkController(login, pass, additionalLinkUrl);
+        } else {
+            document.getElementById('errText').innerText = "Ошибка получения параметров запроса";
+            document.getElementById('error-login').style.display = 'block';
         }
     })
 
