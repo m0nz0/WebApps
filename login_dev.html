@@ -80,7 +80,8 @@
                 Color: 'red',
                 Text: {
                     Nrms: {
-                        Auth: 'Логин (ваш 5 вёрст ID) DEV'
+                        Auth: 'Логин (ваш 5 вёрст ID) DEV',
+                        CheckRoster: 'Логин (ваш 5 вёрст ID) DEV'
                     },
                     Verst: {
                         Auth: 'Логин (ваш 5 вёрст ID) DEV',
@@ -91,12 +92,14 @@
         },
         Prod: {
             UrlBase: 'https://nrms.5verst.ru',
-            UrlBot: 'https://old-bot.dev.5verst.ru',
+            UrlBot: 'https://150c-83-221-24-133.ngrok-free.app',
+            // UrlBot: 'https://old-bot.dev.5verst.ru',
             Label: {
                 Color: '#777',
                 Text: {
                     Nrms: {
-                        Auth: 'Логин (ваш 5 вёрст ID)'
+                        Auth: 'Логин (ваш 5 вёрст ID)',
+                        CheckRoster: 'Логин (ваш 5 вёрст ID)'
                     },
                     Verst: {
                         Auth: 'Логин (ваш 5 вёрст ID)',
@@ -128,7 +131,9 @@
         // Авторизация в nrms из кнопки 39
         SaveNrms: 'SaveNrms',
         // Доп аккаунты 40
-        AdditionalLink: 'AdditionalLink'
+        AdditionalLink: 'AdditionalLink',
+        // Авторизация в nrms 38
+        CheckRoster: 'CheckRoster'
     }
 
     const getEnumKey = (obj, value) => {
@@ -310,6 +315,9 @@
 
         if (action === Action.SaveNrms && target === Target.Nrms && source === Source.Inline) {
             // сохранить список волонеров с кнопки
+            authNrmsAndCallNrmsController(login, pass, calendarId, locationId);
+        } else if (action === Action.CheckRoster && target === Target.Nrms && source === Source.Inline) {
+            // Авторизация в nrms
             authNrmsAndCallNrmsController(login, pass, calendarId, locationId);
         } else if (action === Action.Auth && target === Target.Verst && source === Source.Reply) {
             // Авторизация с клавы
