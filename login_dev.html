@@ -183,8 +183,6 @@
             .then(res => res.json())
             .then(resLogin => {
 
-                tg.showAlert(JSON.stringify(resLogin));
-
                 if (!resLogin.errorMessage) {
                     console.log('Save team. Nrms auth success')
 
@@ -217,6 +215,9 @@
 
                         })
                 } else {
+                    if (resLogin.errorCode === -1) {
+                        tg.showAlert("Ошибка авторизации");
+                    }
                     tg.showAlert(resLogin.errorMessage);
                 }
             })
