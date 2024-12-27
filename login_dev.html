@@ -66,6 +66,17 @@
 
     let tg = window.Telegram.WebApp;
 
+    tg.disableVerticalSwipes();
+    tg.addEventListener('visibilitychange', () => {
+        if (!tg.isEnabled){
+            console.log("!!! EXPANDED !!!")
+        }
+        else {
+            console.log("!!! COLLAPSED !!!")
+        }
+
+    });
+
     const nrmsAuthUrl = '/api/v1/auth/login';
     const verstAuthUrl = '/api/v1/account/login';
     const saveTeamUrl = '/api/v1/webapp/save-nrms';
