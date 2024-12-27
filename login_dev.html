@@ -65,14 +65,15 @@
 <script>
 
     let tg = window.Telegram.WebApp;
-    tg.disableVerticalSwipes();
-    tg.addEventListener('hide', () => {
-        if (tg.isExpanded) {
-            tg.showAlert("!!! EXPANDED !!!")
-        } else {
-            tg.alert("!!! COLLAPSED !!!")
-        }
-    });
+    try {
+        tg.disableVerticalSwipes();
+        tg.addEventListener('hide', () => {
+            if (tg.isExpanded) {
+                tg.showAlert("!!! EXPANDED !!!")
+            } else {
+                tg.alert("!!! COLLAPSED !!!")
+            }
+        });
 
     const nrmsAuthUrl = '/api/v1/auth/login';
     const verstAuthUrl = '/api/v1/account/login';
@@ -329,26 +330,29 @@
 
         console.log(login, pass, calendarId, locationId, source, target, action, version)
 
-        if (action === Action.SaveNrms && target === Target.Nrms && source === Source.Inline) {
-            // сохранить список волонеров с кнопки
-            authNrmsAndCallNrmsController(login, pass, calendarId, locationId);
-        } else if (action === Action.CheckRoster && target === Target.Nrms && source === Source.Inline) {
-            // Авторизация в nrms
-            authNrmsAndCallNrmsController(login, pass, calendarId, locationId);
-        } else if (action === Action.Auth && target === Target.Verst && source === Source.Reply) {
-            // Авторизация с клавы
-            authVerstAndSendDataBackToBot(login, pass);
-        } else if (target === Target.Verst && source === Source.Inline && action === Action.Auth) {
-            // Авторизация с кнопки
-            authVerstAndCallLinkController(login, pass, linkUrl);
-        } else if (target === Target.Verst && source === Source.Inline && action === Action.AdditionalLink) {
-            // Авторизация с кнопки
-            authVerstAndCallLinkController(login, pass, additionalLinkUrl);
-        } else {
-            document.getElementById('errText').innerText = "Ошибка получения параметров запроса";
-            document.getElementById('error-login').style.display = 'block';
-        }
-    })
+            if (action === Action.SaveNrms && target === Target.Nrms && source === Source.Inline) {
+                // сохранить список волонеров с кнопки
+                authNrmsAndCallNrmsController(login, pass, calendarId, locationId);
+            } else if (action === Action.CheckRoster && target === Target.Nrms && source === Source.Inline) {
+                // Авторизация в nrms
+                authNrmsAndCallNrmsController(login, pass, calendarId, locationId);
+            } else if (action === Action.Auth && target === Target.Verst && source === Source.Reply) {
+                // Авторизация с клавы
+                authVerstAndSendDataBackToBot(login, pass);
+            } else if (target === Target.Verst && source === Source.Inline && action === Action.Auth) {
+                // Авторизация с кнопки
+                authVerstAndCallLinkController(login, pass, linkUrl);
+            } else if (target === Target.Verst && source === Source.Inline && action === Action.AdditionalLink) {
+                // Авторизация с кнопки
+                authVerstAndCallLinkController(login, pass, additionalLinkUrl);
+            } else {
+                document.getElementById('errText').innerText = "Ошибка получения параметров запроса";
+                document.getElementById('error-login').style.display = 'block';
+            }
+        })
+    } catch (e) {
+        tg.showAlert(e.message)
+    }
 
 </script>
 </body>
