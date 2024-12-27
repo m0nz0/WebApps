@@ -138,12 +138,6 @@
         CheckRoster: 'CheckRoster'
     }
 
-    const getEnumKey = (obj, value) => {
-        return Object.keys(obj).find(
-            key => obj[key].toString() === value.toString())
-    }
-
-
     let urlParams = document.location.search.split('?')[1]
         .split('&')
         .map((item) => {
@@ -305,13 +299,14 @@
         let login = document.getElementById('login').value;
         let pass = document.getElementById('password').value;
 
+
         if (!login || login === '') {
-            tg.alert('Please enter your login details')
+            tg.showAlert('Please enter your login details')
             return;
         }
 
-        if (!pass || !pass || pass === '') {
-            tg.alert('Please enter your password')
+        if (!pass || pass === '') {
+            tg.showAlert('Please enter your password')
             return;
         }
 
