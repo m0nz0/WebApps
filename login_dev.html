@@ -13,9 +13,9 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-<div class="SignInScreen_wrapper__g60OM snipcss-jSeDi">
+<div class="SignInScreen_wrapper snipcss-jSeDi">
     <main>
-        <div class="SignInScreen_logo__Iibpj" id="header">
+        <div class="SignInScreen_logo" id="header">
             <img src="https://nrms.5verst.ru/img/Logo_B.png" alt="logo"></div>
         <section>
             <form>
@@ -63,15 +63,13 @@
 
     let tg = window.Telegram.WebApp;
     tg.disableVerticalSwipes();
-    tg.showAlert('in start ' + tg.isActive)
     // tg.onEvent('deactivated', () => {
-    //     tg.showAlert('on deactivated ' + tg.isActive)
     //     tg.close();
     // })
 
-    tg.onEvent('backButtonClicked', () => {
-        tg.close();
-    })
+    // tg.onEvent('backButtonClicked', () => {
+    //     tg.close();
+    // })
 
     const nrmsAuthUrl = '/api/v1/auth/login';
     const verstAuthUrl = '/api/v1/account/login';
@@ -353,7 +351,13 @@
         background-color: white;
     }
 
-    .SignInScreen_wrapper__g60OM main form {
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .SignInScreen_wrapper main form {
         font-size: 1rem;
         text-align: left;
         width: 290px;
@@ -389,7 +393,7 @@
         /*transition: all .3s ease-in-out;*/
     }
 
-    .SignInScreen_wrapper__g60OM main {
+    .SignInScreen_wrapper main {
         border-radius: 20px;
         box-shadow: 0 0 10px #ddd;
         color: #777;
@@ -398,7 +402,7 @@
         text-align: center;
     }
 
-    .SignInScreen_wrapper__g60OM main .SignInScreen_logo__Iibpj {
+    .SignInScreen_wrapper main .SignInScreen_logo {
         /*background-color: #6e84be;*/
         border-top-left-radius: 20px;
         border-top-right-radius: 20px;
@@ -406,7 +410,7 @@
         width: 400px;
     }
 
-    .SignInScreen_wrapper__g60OM main section {
+    .SignInScreen_wrapper main section {
         align-items: center;
         display: flex;
         flex-direction: column;
@@ -414,7 +418,7 @@
         text-align: center;
     }
 
-    .SignInScreen_wrapper__g60OM {
+    .SignInScreen_wrapper {
         display: flex;
         justify-content: center;
         margin-top: 10%;
