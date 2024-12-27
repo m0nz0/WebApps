@@ -12,9 +12,9 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-<div class="SignInScreen_wrapper__g60OM snipcss-jSeDi">
+<div class="SignInScreen_wrapper snipcss-jSeDi">
     <main>
-        <div class="SignInScreen_logo__Iibpj" id="header">
+        <div class="SignInScreen_logo" id="header">
             <img src="https://nrms.5verst.ru/img/Logo_B.png" alt="logo"></div>
         <section>
             <form>
@@ -27,7 +27,7 @@
                         <input class="form-control no-left-border"
                                placeholder="123456789"
                                aria-label="login"
-                               type="text"
+                               type="number"
                                id="login"
                                aria-describedby="id-a">
                     </div>
@@ -47,9 +47,6 @@
                         </span>
                     </div>
                 </div>
-                <div id="error-login" style="display: none">
-                    <span style="color: red" id="errText"></span>
-                </div>
             </form>
             <button type="button"
                     class="sign-btn btn btn-danger" id="btn">Вход
@@ -64,6 +61,7 @@
 <script>
 
     let tg = window.Telegram.WebApp;
+    tg.disableVerticalSwipes();
 
     const nrmsAuthUrl = '/api/v1/auth/login';
     const verstAuthUrl = '/api/v1/account/login';
@@ -134,12 +132,6 @@
         CheckRoster: 'CheckRoster'
     }
 
-    const getEnumKey = (obj, value) => {
-        return Object.keys(obj).find(
-            key => obj[key].toString() === value.toString())
-    }
-
-
     let urlParams = document.location.search.split('?')[1]
         .split('&')
         .map((item) => {
@@ -153,6 +145,11 @@
     let target = urlParams.find(x => x.key === 't')?.value;
     let action = urlParams.find(x => x.key === 'a')?.value;
     let version = urlParams.find(x => x.key === 'v').value;
+    let verstId = urlParams.find(x => x.key === 'vi')?.value;
+
+    if (verstId) {
+        document.getElementById('login').value = verstId;
+    }
 
     document.getElementById('header').style.backgroundColor = HeaderColor[target];
     document.getElementById('login_text').textContent = Config[version].Label.Text[target][action];
@@ -215,13 +212,14 @@
                             tg.close()
                         })
                         .catch((err) => {
-                            document.getElementById('errText').innerText = JSON.stringify(err);
-                            document.getElementById('error-login').style.display = 'block';
+                            tg.showAlert(err.message);
 
                         })
                 } else {
-                    document.getElementById('errText').innerText = resLogin.errorMessage;
-                    document.getElementById('error-login').style.display = 'block';
+                    if (resLogin.errorCode === -1) {
+                        tg.showAlert("Ошибка авторизации");
+                    }
+                    tg.showAlert(resLogin.errorMessage);
                 }
             })
     }
@@ -264,13 +262,11 @@
                             tg.close()
                         })
                         .catch((err) => {
-                            document.getElementById('errText').innerText = JSON.stringify(err);
-                            document.getElementById('error-login').style.display = 'block';
+                            tg.showAlert(err.message);
 
                         })
                 } else {
-                    document.getElementById('errText').innerText = resLogin.errorMessage;
-                    document.getElementById('error-login').style.display = 'block';
+                    tg.showAlert(resLogin.errorMessage);
                 }
             })
     }
@@ -296,18 +292,27 @@
                     tg.sendData(JSON.stringify({token: resLogin.result.token}))
                     tg.close()
                 } else {
-                    document.getElementById('errText').innerText = resLogin.errorMessage;
-                    document.getElementById('error-login').style.display = 'block';
+                    tg.showAlert(resLogin.errorMessage);
                 }
             })
     }
 
     document.getElementById('btn').addEventListener('click', () => {
         console.log("sign clicked")
-        document.getElementById('error-login').style.display = 'none';
 
         let login = document.getElementById('login').value;
         let pass = document.getElementById('password').value;
+
+
+        if (!login || login === '') {
+            tg.showAlert('Введите логин')
+            return;
+        }
+
+        if (!pass || pass === '') {
+            tg.showAlert('Введите пароль')
+            return;
+        }
 
         console.log(login, pass, calendarId, locationId, source, target, action, version)
 
@@ -327,8 +332,7 @@
             // Авторизация с кнопки
             authVerstAndCallLinkController(login, pass, additionalLinkUrl);
         } else {
-            document.getElementById('errText').innerText = "Ошибка получения параметров запроса";
-            document.getElementById('error-login').style.display = 'block';
+            tg.showAlert("Ошибка получения параметров запроса");
         }
     })
 
@@ -340,7 +344,13 @@
         background-color: white;
     }
 
-    .SignInScreen_wrapper__g60OM main form {
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .SignInScreen_wrapper main form {
         font-size: 1rem;
         text-align: left;
         width: 290px;
@@ -375,7 +385,7 @@
         /*transition: all .3s ease-in-out;*/
     }
 
-    .SignInScreen_wrapper__g60OM main {
+    .SignInScreen_wrapper main {
         border-radius: 20px;
         box-shadow: 0 0 10px #ddd;
         color: #777;
@@ -384,7 +394,7 @@
         text-align: center;
     }
 
-    .SignInScreen_wrapper__g60OM main .SignInScreen_logo__Iibpj {
+    .SignInScreen_wrapper main .SignInScreen_logo {
         /*background-color: #6e84be;*/
         border-top-left-radius: 20px;
         border-top-right-radius: 20px;
@@ -392,7 +402,7 @@
         width: 400px;
     }
 
-    .SignInScreen_wrapper__g60OM main section {
+    .SignInScreen_wrapper main section {
         align-items: center;
         display: flex;
         flex-direction: column;
@@ -400,7 +410,7 @@
         text-align: center;
     }
 
-    .SignInScreen_wrapper__g60OM {
+    .SignInScreen_wrapper {
         display: flex;
         justify-content: center;
         margin-top: 10%;

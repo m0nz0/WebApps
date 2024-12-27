@@ -154,7 +154,7 @@
     let target = urlParams.find(x => x.key === 't')?.value;
     let action = urlParams.find(x => x.key === 'a')?.value;
     let version = urlParams.find(x => x.key === 'v').value;
-    let verstId = urlParams.find(x => x.key === 'vi').value;
+    let verstId = urlParams.find(x => x.key === 'vi')?.value;
 
     if (verstId) {
         document.getElementById('login').value = verstId;
@@ -163,6 +163,8 @@
     document.getElementById('header').style.backgroundColor = HeaderColor[target];
     document.getElementById('login_text').textContent = Config[version].Label.Text[target][action];
     document.getElementById('login_text').style.color = Config[version].Label.Color;
+
+    tg.expand();
 
     document.getElementById('view').addEventListener('click', () => {
         let pass = document.getElementById('password')
@@ -371,7 +373,6 @@
     .no-right-border {
         border-right: 0;
     }
-
 
     .form-group {
         margin: 20px 0 20px;
