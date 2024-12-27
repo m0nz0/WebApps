@@ -65,7 +65,7 @@
     try {
         tg.disableVerticalSwipes();
         tg.onEvent('deactivated', () => {
-            console.log('on deactivated');
+            tg.showAlert('on deactivated');
             // tg.close();
         })
 
