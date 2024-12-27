@@ -48,9 +48,6 @@
                         </span>
                     </div>
                 </div>
-                <div id="error-login" style="display: none">
-                    <span style="color: red" id="errText"></span>
-                </div>
             </form>
             <button type="button"
                     class="sign-btn btn btn-danger" id="btn">Вход
@@ -67,273 +64,258 @@
     let tg = window.Telegram.WebApp;
     try {
         tg.disableVerticalSwipes();
-        // tg.addEventListener('hide', () => {
-        //     if (tg.isExpanded) {
-        //         tg.showAlert("!!! EXPANDED !!!")
-        //     } else {
-        //         tg.alert("!!! COLLAPSED !!!")
-        //     }
-        // });
-
         tg.onEvent('deactivated', (val) => {
-            tg.showAlert('on deactivated: ' + val)
-            // tg.close();
+            tg.close();
         })
 
-    const nrmsAuthUrl = '/api/v1/auth/login';
-    const verstAuthUrl = '/api/v1/account/login';
-    const saveTeamUrl = '/api/v1/webapp/save-nrms';
-    const linkUrl = '/api/v1/webapp/link';
-    const additionalLinkUrl = '/api/v1/webapp/additional-link';
+        const nrmsAuthUrl = '/api/v1/auth/login';
+        const verstAuthUrl = '/api/v1/account/login';
+        const saveTeamUrl = '/api/v1/webapp/save-nrms';
+        const linkUrl = '/api/v1/webapp/link';
+        const additionalLinkUrl = '/api/v1/webapp/additional-link';
 
-    const Config = {
-        Dev: {
-            UrlBase: 'https://nrms.dev.5verst.ru',
-            UrlBot: 'https://150c-83-221-24-133.ngrok-free.app',
-            Label: {
-                Color: 'red',
-                Text: {
-                    Nrms: {
-                        Auth: 'Логин (ваш 5 вёрст ID) DEV',
-                        CheckRoster: 'Логин (ваш 5 вёрст ID) DEV'
-                    },
-                    Verst: {
-                        Auth: 'Логин (ваш 5 вёрст ID) DEV',
-                        AdditionalLink: 'Логин (дополнительный 5 вёрст ID) DEV',
+        const Config = {
+            Dev: {
+                UrlBase: 'https://nrms.dev.5verst.ru',
+                UrlBot: 'https://150c-83-221-24-133.ngrok-free.app',
+                Label: {
+                    Color: 'red',
+                    Text: {
+                        Nrms: {
+                            Auth: 'Логин (ваш 5 вёрст ID) DEV',
+                            CheckRoster: 'Логин (ваш 5 вёрст ID) DEV'
+                        },
+                        Verst: {
+                            Auth: 'Логин (ваш 5 вёрст ID) DEV',
+                            AdditionalLink: 'Логин (дополнительный 5 вёрст ID) DEV',
+                        }
                     }
-                }
+                },
             },
-        },
-        Prod: {
-            UrlBase: 'https://nrms.5verst.ru',
-            UrlBot: 'https://150c-83-221-24-133.ngrok-free.app',
-            // UrlBot: 'https://old-bot.dev.5verst.ru',
-            Label: {
-                Color: '#777',
-                Text: {
-                    Nrms: {
-                        Auth: 'Логин (ваш 5 вёрст ID)',
-                        CheckRoster: 'Логин (ваш 5 вёрст ID)'
-                    },
-                    Verst: {
-                        Auth: 'Логин (ваш 5 вёрст ID)',
-                        AdditionalLink: 'Логин (дополнительный 5 вёрст ID)',
+            Prod: {
+                UrlBase: 'https://nrms.5verst.ru',
+                UrlBot: 'https://150c-83-221-24-133.ngrok-free.app',
+                // UrlBot: 'https://old-bot.dev.5verst.ru',
+                Label: {
+                    Color: '#777',
+                    Text: {
+                        Nrms: {
+                            Auth: 'Логин (ваш 5 вёрст ID)',
+                            CheckRoster: 'Логин (ваш 5 вёрст ID)'
+                        },
+                        Verst: {
+                            Auth: 'Логин (ваш 5 вёрст ID)',
+                            AdditionalLink: 'Логин (дополнительный 5 вёрст ID)',
+                        }
                     }
-                }
-            },
+                },
+            }
         }
-    }
 
-    const HeaderColor = {
-        Nrms: '#741414',
-        Verst: '#6e84be'
-    }
+        const HeaderColor = {
+            Nrms: '#741414',
+            Verst: '#6e84be'
+        }
 
-    const Source = {
-        Inline: 'Inline',
-        Reply: 'Reply'
-    }
+        const Source = {
+            Inline: 'Inline',
+            Reply: 'Reply'
+        }
 
-    const Target = {
-        Nrms: 'Nrms',
-        Verst: 'Verst'
-    }
+        const Target = {
+            Nrms: 'Nrms',
+            Verst: 'Verst'
+        }
 
-    const Action = {
-        // авторизация verst из клавы 4
-        Auth: 'Auth',
-        // Авторизация в nrms из кнопки 39
-        SaveNrms: 'SaveNrms',
-        // Доп аккаунты 40
-        AdditionalLink: 'AdditionalLink',
-        // Авторизация в nrms 38
-        CheckRoster: 'CheckRoster'
-    }
+        const Action = {
+            // авторизация verst из клавы 4
+            Auth: 'Auth',
+            // Авторизация в nrms из кнопки 39
+            SaveNrms: 'SaveNrms',
+            // Доп аккаунты 40
+            AdditionalLink: 'AdditionalLink',
+            // Авторизация в nrms 38
+            CheckRoster: 'CheckRoster'
+        }
 
-    const getEnumKey = (obj, value) => {
-        return Object.keys(obj).find(
-            key => obj[key].toString() === value.toString())
-    }
+        const getEnumKey = (obj, value) => {
+            return Object.keys(obj).find(
+                key => obj[key].toString() === value.toString())
+        }
 
 
-    let urlParams = document.location.search.split('?')[1]
-        .split('&')
-        .map((item) => {
-            let s = item.split('=');
-            return {key: s[0], value: s[1]}
+        let urlParams = document.location.search.split('?')[1]
+            .split('&')
+            .map((item) => {
+                let s = item.split('=');
+                return {key: s[0], value: s[1]}
+            })
+
+        let calendarId = urlParams.find(x => x.key === 'c')?.value;
+        let locationId = urlParams.find(x => x.key === 'l')?.value;
+        let source = urlParams.find(x => x.key === 's')?.value;
+        let target = urlParams.find(x => x.key === 't')?.value;
+        let action = urlParams.find(x => x.key === 'a')?.value;
+        let version = urlParams.find(x => x.key === 'v').value;
+
+        document.getElementById('header').style.backgroundColor = HeaderColor[target];
+        document.getElementById('login_text').textContent = Config[version].Label.Text[target][action];
+        document.getElementById('login_text').style.color = Config[version].Label.Color;
+
+        document.getElementById('view').addEventListener('click', () => {
+            let pass = document.getElementById('password')
+            if (pass.type === 'password') {
+                pass.type = 'text'
+                document.getElementById("hide").style.display = "none";
+                document.getElementById("show").style.display = "block";
+            } else {
+                pass.type = 'password'
+                document.getElementById("hide").style.display = "block";
+                document.getElementById("show").style.display = "none";
+            }
         })
 
-    let calendarId = urlParams.find(x => x.key === 'c')?.value;
-    let locationId = urlParams.find(x => x.key === 'l')?.value;
-    let source = urlParams.find(x => x.key === 's')?.value;
-    let target = urlParams.find(x => x.key === 't')?.value;
-    let action = urlParams.find(x => x.key === 'a')?.value;
-    let version = urlParams.find(x => x.key === 'v').value;
+        // получение токена и сохранение команды
+        const authNrmsAndCallNrmsController = (login, pass, calendarId, locationId) => {
+            let body = {username: 'A' + login, password: pass}
 
-    document.getElementById('header').style.backgroundColor = HeaderColor[target];
-    document.getElementById('login_text').textContent = Config[version].Label.Text[target][action];
-    document.getElementById('login_text').style.color = Config[version].Label.Color;
+            console.log('Save team. Nrms auth start ')
 
-    document.getElementById('view').addEventListener('click', () => {
-        let pass = document.getElementById('password')
-        if (pass.type === 'password') {
-            pass.type = 'text'
-            document.getElementById("hide").style.display = "none";
-            document.getElementById("show").style.display = "block";
-        } else {
-            pass.type = 'password'
-            document.getElementById("hide").style.display = "block";
-            document.getElementById("show").style.display = "none";
-        }
-    })
+            fetch(`${Config[version].UrlBase}${nrmsAuthUrl}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            })
+                .then(res => res.json())
+                .then(resLogin => {
 
-    // получение токена и сохранение команды
-    const authNrmsAndCallNrmsController = (login, pass, calendarId, locationId) => {
-        let body = {username: 'A' + login, password: pass}
+                    if (!resLogin.errorMessage) {
+                        console.log('Save team. Nrms auth success')
 
-        console.log('Save team. Nrms auth start ')
+                        let token = resLogin.result.token;
+                        let saveNrmsRequest = {
+                            c: calendarId,
+                            pv: locationId,
+                            to: token,
+                            tg: tg.initDataUnsafe.user.id
+                        }
 
-        fetch(`${Config[version].UrlBase}${nrmsAuthUrl}`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(body)
-        })
-            .then(res => res.json())
-            .then(resLogin => {
+                        let headers = {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*',
+                            'Access-Control-Allow-Methods': '*'
+                        };
 
-                if (!resLogin.errorMessage) {
-                    console.log('Save team. Nrms auth success')
+                        console.log('Save team. Save team start')
+                        fetch(`${Config[version].UrlBot}${saveTeamUrl}`, {
+                            method: 'POST',
+                            body: JSON.stringify(saveNrmsRequest),
+                            headers: headers,
+                        })
+                            .then(res => {
+                                console.log('Save team. Save team continue')
+                                tg.close()
+                            })
+                            .catch((err) => {
+                                tg.showAlert(err.message);
 
-                    let token = resLogin.result.token;
-                    let saveNrmsRequest = {
-                        c: calendarId,
-                        pv: locationId,
-                        to: token,
-                        tg: tg.initDataUnsafe.user.id
+                            })
+                    } else {
+                        tg.showAlert(resLogin.errorMessage);
                     }
-
-                    let headers = {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Methods': '*'
-                    };
-
-                    console.log('Save team. Save team start')
-                    fetch(`${Config[version].UrlBot}${saveTeamUrl}`, {
-                        method: 'POST',
-                        body: JSON.stringify(saveNrmsRequest),
-                        headers: headers,
-                    })
-                        .then(res => {
-                            console.log('Save team. Save team continue')
-                            tg.close()
-                        })
-                        .catch((err) => {
-                            document.getElementById('errText').innerText = JSON.stringify(err);
-                            document.getElementById('error-login').style.display = 'block';
-
-                        })
-                } else {
-                    document.getElementById('errText').innerText = resLogin.errorMessage;
-                    document.getElementById('error-login').style.display = 'block';
-                }
-            })
-    }
-
-    // авторизация verst и запрос на линковку
-    const authVerstAndCallLinkController = (login, pass, url) => {
-        let body = {username: 'A' + login, password: pass}
-
-        console.log('Verst link. Verst auth start')
-
-        fetch(`${Config[version].UrlBase}${verstAuthUrl}`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(body)
-        })
-            .then(res => res.json())
-            .then(resLogin => {
-
-                if (!resLogin.errorMessage) {
-
-                    console.log('Verst link. Verst auth success')
-
-                    let headers = {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Methods': '*'
-                    };
-
-                    console.log('Verst link. Link start')
-
-                    fetch(`${Config[version].UrlBot}${url}`, {
-                        method: 'POST',
-                        body: JSON.stringify({tg: tg.initDataUnsafe.user.id, vid: login}),
-                        headers: headers,
-                    })
-                        .then(res => {
-
-                            console.log('Verst link. Link continue')
-
-                            tg.close()
-                        })
-                        .catch((err) => {
-                            document.getElementById('errText').innerText = JSON.stringify(err);
-                            document.getElementById('error-login').style.display = 'block';
-
-                        })
-                } else {
-                    document.getElementById('errText').innerText = resLogin.errorMessage;
-                    document.getElementById('error-login').style.display = 'block';
-                }
-            })
-    }
-
-    // авторизация Verst и отправка данных обратно в бота
-    const authVerstAndSendDataBackToBot = (login, pass) => {
-        let body = {username: 'A' + login, password: pass}
-
-        console.log('Verst link button. Verst auth start')
-
-        fetch(`${Config[version].UrlBase}${verstAuthUrl}`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(body)
-        })
-            .then(res => res.json())
-            .then(resLogin => {
-
-                console.log('Verst link button. Verst auth success')
-
-                if (!resLogin.errorMessage) {
-                    console.log('Verst link button. Verst send data back to bot')
-                    tg.sendData(JSON.stringify({token: resLogin.result.token}))
-                    tg.close()
-                } else {
-                    document.getElementById('errText').innerText = resLogin.errorMessage;
-                    document.getElementById('error-login').style.display = 'block';
-                }
-            })
-    }
-
-    document.getElementById('btn').addEventListener('click', () => {
-        console.log("sign clicked")
-        document.getElementById('error-login').style.display = 'none';
-
-        let login = document.getElementById('login').value;
-        let pass = document.getElementById('password').value;
-
-        if (!login || login === '') {
-            tg.alert('Please enter your login details')
-            return;
+                })
         }
 
-        if (!pass || !pass || pass === '') {
-            tg.alert('Please enter your password')
-            return;
+        // авторизация verst и запрос на линковку
+        const authVerstAndCallLinkController = (login, pass, url) => {
+            let body = {username: 'A' + login, password: pass}
+
+            console.log('Verst link. Verst auth start')
+
+            fetch(`${Config[version].UrlBase}${verstAuthUrl}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            })
+                .then(res => res.json())
+                .then(resLogin => {
+
+                    if (!resLogin.errorMessage) {
+
+                        console.log('Verst link. Verst auth success')
+
+                        let headers = {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*',
+                            'Access-Control-Allow-Methods': '*'
+                        };
+
+                        console.log('Verst link. Link start')
+
+                        fetch(`${Config[version].UrlBot}${url}`, {
+                            method: 'POST',
+                            body: JSON.stringify({tg: tg.initDataUnsafe.user.id, vid: login}),
+                            headers: headers,
+                        })
+                            .then(res => {
+
+                                console.log('Verst link. Link continue')
+
+                                tg.close()
+                            })
+                            .catch((err) => {
+                                tg.showAlert(err.message);
+
+                            })
+                    } else {
+                        tg.showAlert(resLogin.errorMessage);
+                    }
+                })
         }
 
-        console.log(login, pass, calendarId, locationId, source, target, action, version)
+        // авторизация Verst и отправка данных обратно в бота
+        const authVerstAndSendDataBackToBot = (login, pass) => {
+            let body = {username: 'A' + login, password: pass}
+
+            console.log('Verst link button. Verst auth start')
+
+            fetch(`${Config[version].UrlBase}${verstAuthUrl}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            })
+                .then(res => res.json())
+                .then(resLogin => {
+
+                    console.log('Verst link button. Verst auth success')
+
+                    if (!resLogin.errorMessage) {
+                        console.log('Verst link button. Verst send data back to bot')
+                        tg.sendData(JSON.stringify({token: resLogin.result.token}))
+                        tg.close()
+                    } else {
+                        tg.showAlert(resLogin.errorMessage);
+                    }
+                })
+        }
+
+        document.getElementById('btn').addEventListener('click', () => {
+            console.log("sign clicked")
+
+            let login = document.getElementById('login').value;
+            let pass = document.getElementById('password').value;
+
+            if (!login || login === '') {
+                tg.alert('Please enter your login details')
+                return;
+            }
+
+            if (!pass || !pass || pass === '') {
+                tg.alert('Please enter your password')
+                return;
+            }
+
+            console.log(login, pass, calendarId, locationId, source, target, action, version)
 
             if (action === Action.SaveNrms && target === Target.Nrms && source === Source.Inline) {
                 // сохранить список волонеров с кнопки
@@ -351,8 +333,7 @@
                 // Авторизация с кнопки
                 authVerstAndCallLinkController(login, pass, additionalLinkUrl);
             } else {
-                document.getElementById('errText').innerText = "Ошибка получения параметров запроса";
-                document.getElementById('error-login').style.display = 'block';
+                tg.showAlert("Ошибка получения параметров запроса");
             }
         })
     } catch (e) {
