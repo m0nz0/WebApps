@@ -64,8 +64,9 @@
     let tg = window.Telegram.WebApp;
     try {
         tg.disableVerticalSwipes();
-        tg.onEvent('deactivated', (val) => {
-            tg.close();
+        tg.onEvent('deactivated', () => {
+            console.log('on deactivated');
+            // tg.close();
         })
 
         const nrmsAuthUrl = '/api/v1/auth/login';
