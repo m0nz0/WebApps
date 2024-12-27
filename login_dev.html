@@ -67,13 +67,18 @@
     let tg = window.Telegram.WebApp;
     try {
         tg.disableVerticalSwipes();
-        tg.addEventListener('hide', () => {
-            if (tg.isExpanded) {
-                tg.showAlert("!!! EXPANDED !!!")
-            } else {
-                tg.alert("!!! COLLAPSED !!!")
-            }
-        });
+        // tg.addEventListener('hide', () => {
+        //     if (tg.isExpanded) {
+        //         tg.showAlert("!!! EXPANDED !!!")
+        //     } else {
+        //         tg.alert("!!! COLLAPSED !!!")
+        //     }
+        // });
+
+        tg.onEvent('deactivated', (val) => {
+            tg.showAlert('on deactivated: ' + val)
+            // tg.close();
+        })
 
     const nrmsAuthUrl = '/api/v1/auth/login';
     const verstAuthUrl = '/api/v1/account/login';
