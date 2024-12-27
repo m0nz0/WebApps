@@ -63,10 +63,10 @@
 
     let tg = window.Telegram.WebApp;
     tg.disableVerticalSwipes();
-    // tg.onEvent('deactivated', () => {
-    //     // tg.showAlert('on deactivated');
-    //     tg.close();
-    // })
+    tg.onEvent('deactivated', () => {
+        // tg.showAlert('on deactivated');
+        tg.close();
+    })
 
     const nrmsAuthUrl = '/api/v1/auth/login';
     const verstAuthUrl = '/api/v1/account/login';
@@ -182,6 +182,8 @@
         })
             .then(res => res.json())
             .then(resLogin => {
+
+                tg.showAlert(resLogin);
 
                 if (!resLogin.errorMessage) {
                     console.log('Save team. Nrms auth success')
@@ -301,12 +303,12 @@
 
 
         if (!login || login === '') {
-            tg.showAlert('Please enter your login details')
+            tg.showAlert('Введите логин')
             return;
         }
 
         if (!pass || pass === '') {
-            tg.showAlert('Please enter your password')
+            tg.showAlert('Введите пароль')
             return;
         }
 
