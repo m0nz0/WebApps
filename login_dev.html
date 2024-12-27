@@ -71,8 +71,7 @@
     //     tg.close();
     // })
     var test=`%NRMS_DEV%`
-    var test2=process.env.NRMS_DEV
-    tg.showAlert(`${test} ${test2}`);
+    tg.showAlert(test);
 
     const nrmsAuthUrl = '/api/v1/auth/login';
     const verstAuthUrl = '/api/v1/account/login';
