@@ -65,17 +65,22 @@
 <script>
 
     let tg = window.Telegram.WebApp;
-
     tg.disableVerticalSwipes();
-    tg.addEventListener('visibilitychange', () => {
-        if (!tg.isEnabled){
-            console.log("!!! EXPANDED !!!")
-        }
-        else {
-            console.log("!!! COLLAPSED !!!")
-        }
+    try {
+        tg.onEvent('hide', () => {
+            if (tg.isExpanded){
+                console.log("!!! EXPANDED !!!")
+            }
+            else {
+                console.log("!!! COLLAPSED !!!")
+                tg.close();
+            }
 
-    });
+        });
+    }
+    catch (e){
+        tg.showAlert(e.message)
+    }
 
     const nrmsAuthUrl = '/api/v1/auth/login';
     const verstAuthUrl = '/api/v1/account/login';
@@ -170,8 +175,6 @@
     document.getElementById('header').style.backgroundColor = HeaderColor[target];
     document.getElementById('login_text').textContent = Config[version].Label.Text[target][action];
     document.getElementById('login_text').style.color = Config[version].Label.Color;
-
-    tg.expand();
 
     document.getElementById('view').addEventListener('click', () => {
         let pass = document.getElementById('password')
