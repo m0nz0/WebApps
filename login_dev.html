@@ -63,9 +63,10 @@
 
     let tg = window.Telegram.WebApp;
     tg.disableVerticalSwipes();
+    tg.showAlert('in start ' + tg.isActive)
     tg.onEvent('deactivated', () => {
-        tg.showAlert('on deactivated');
-        // tg.close();
+        tg.showAlert('on deactivated ' + tg.isActive)
+        tg.close();
     })
 
     const nrmsAuthUrl = '/api/v1/auth/login';
@@ -151,6 +152,11 @@
     let target = urlParams.find(x => x.key === 't')?.value;
     let action = urlParams.find(x => x.key === 'a')?.value;
     let version = urlParams.find(x => x.key === 'v').value;
+    let verstId = urlParams.find(x => x.key === 'vi').value;
+
+    if (verstId) {
+        document.getElementById('login').value = verstId;
+    }
 
     document.getElementById('header').style.backgroundColor = HeaderColor[target];
     document.getElementById('login_text').textContent = Config[version].Label.Text[target][action];
