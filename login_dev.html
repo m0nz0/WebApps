@@ -64,8 +64,12 @@
     let tg = window.Telegram.WebApp;
     tg.disableVerticalSwipes();
     tg.showAlert('in start ' + tg.isActive)
-    tg.onEvent('deactivated', () => {
-        tg.showAlert('on deactivated ' + tg.isActive)
+    // tg.onEvent('deactivated', () => {
+    //     tg.showAlert('on deactivated ' + tg.isActive)
+    //     tg.close();
+    // })
+
+    tg.onEvent('backButtonClicked', () => {
         tg.close();
     })
 
